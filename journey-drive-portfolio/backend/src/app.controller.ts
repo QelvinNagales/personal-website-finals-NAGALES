@@ -1,9 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
 
-@Controller() // Ensure this is empty to catch the root "/"
+@Controller() // Keeping this empty handles the root "/"
 export class AppController {
-  @Get() // This matches the base URL
+  @Get()
   getHello() {
-    return { message: 'Backend is live!' };
+    return { status: 'ok', message: 'NestJS is live on Vercel!' };
   }
 }
