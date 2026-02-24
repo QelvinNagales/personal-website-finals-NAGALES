@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller'; // Import it here
+import { AppController } from './app.controller';
 import { SpotifyModule } from './spotify/spotify.module';
-import { GuestbookModule } from './guestbook/guestbook.module';
 
 @Module({
-  imports: [SpotifyModule, GuestbookModule],
-  controllers: [AppController], // Add it to this array
-  providers: [],
+  imports: [SpotifyModule],
+  controllers: [AppController], // This makes the "/" route work!
 })
 export class AppModule {}
