@@ -1,0 +1,310 @@
+/* 3D Portfolio Game Design System - Google Interland inspired */
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Sky & Environment */
+    --sky-top: 210 80% 70%;
+    --sky-bottom: 35 90% 85%;
+    --sun-glow: 40 100% 70%;
+    
+    /* Road & Ground */
+    --road-main: 220 10% 25%;
+    --road-stripe: 48 100% 60%;
+    --ground: 85 35% 55%;
+    --ground-accent: 95 40% 45%;
+    
+    /* UI Colors - Grab Green & White */
+    --background: 0 0% 100%;
+    --foreground: 160 15% 15%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 160 15% 15%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 15% 15%;
+    
+    --primary: 131 40% 54%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 131 30% 92%;
+    --secondary-foreground: 131 40% 30%;
+    
+    --muted: 140 15% 94%;
+    --muted-foreground: 160 10% 45%;
+    
+    --accent: 131 50% 45%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 140 15% 88%;
+    --input: 140 15% 88%;
+    --ring: 131 40% 54%;
+    
+    --radius: 1rem;
+    
+    /* Game-specific tokens */
+    --checkpoint-glow: 131 40% 54%;
+    --checkpoint-active: 131 50% 45%;
+    --overlay-bg: 160 30% 10% / 0.85;
+    --joystick-bg: 0 0% 100% / 0.15;
+    --joystick-knob: 0 0% 100% / 0.9;
+    --joystick-border: 0 0% 100% / 0.3;
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(160 20% 20% / 0.12);
+    --shadow-glow: 0 0 30px 5px hsl(var(--checkpoint-glow) / 0.5);
+    --shadow-card: 0 8px 32px -8px hsl(160 20% 20% / 0.15);
+    
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 160 10% 26%;
+    --sidebar-primary: 131 40% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 140 15% 95%;
+    --sidebar-accent-foreground: 160 10% 15%;
+    --sidebar-border: 140 15% 90%;
+    --sidebar-ring: 131 40% 54%;
+  }
+
+  .dark {
+    --background: 160 20% 8%;
+    --foreground: 140 15% 95%;
+    
+    --card: 160 20% 12%;
+    --card-foreground: 140 15% 95%;
+    
+    --popover: 160 20% 12%;
+    --popover-foreground: 140 15% 95%;
+    
+    --primary: 131 40% 54%;
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 131 25% 20%;
+    --secondary-foreground: 131 30% 80%;
+    
+    --muted: 160 15% 18%;
+    --muted-foreground: 160 10% 60%;
+    
+    --accent: 131 50% 40%;
+    --accent-foreground: 0 0% 100%;
+    
+    --destructive: 0 65% 45%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 160 15% 22%;
+    --input: 160 15% 22%;
+    --ring: 131 40% 54%;
+    
+    --overlay-bg: 160 30% 5% / 0.9;
+    
+    --sidebar-background: 160 20% 8%;
+    --sidebar-foreground: 140 15% 90%;
+    --sidebar-primary: 131 40% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 160 15% 15%;
+    --sidebar-accent-foreground: 140 15% 90%;
+    --sidebar-border: 160 15% 18%;
+    --sidebar-ring: 131 40% 54%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* The profile page needs to scroll; the game is fixed-position so it doesn't
+     depend on overflow:hidden at root level. */
+  html, body, #root {
+    @apply h-full w-full;
+  }
+
+  body {
+    @apply bg-background text-foreground font-game antialiased;
+  }
+}
+
+@layer components {
+  /* Game UI Components */
+  .game-overlay {
+    @apply fixed inset-0 pointer-events-none z-50;
+  }
+  
+  .game-card {
+    @apply bg-card rounded-2xl p-6 pointer-events-auto;
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(12px);
+  }
+  
+  .game-button {
+    @apply px-6 py-3 rounded-xl font-bold text-lg transition-all duration-200;
+    @apply hover:scale-105 active:scale-95;
+  }
+  
+  .game-button-primary {
+    @apply game-button bg-primary text-primary-foreground;
+    @apply hover:brightness-110;
+  }
+  
+  .game-button-secondary {
+    @apply game-button bg-secondary text-secondary-foreground;
+    @apply hover:brightness-110;
+  }
+  
+  .game-button-ghost {
+    @apply game-button bg-muted text-foreground;
+    @apply hover:bg-muted/80;
+  }
+  
+  /* Joystick Styles */
+  .joystick-base {
+    @apply rounded-full flex items-center justify-center;
+    background: hsl(var(--joystick-bg));
+    border: 2px solid hsl(var(--joystick-border));
+    backdrop-filter: blur(8px);
+  }
+  
+  .joystick-knob {
+    @apply rounded-full;
+    background: hsl(var(--joystick-knob));
+    box-shadow: 0 4px 12px hsl(220 30% 20% / 0.3);
+  }
+  
+  /* Checkpoint marker glow */
+  .checkpoint-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  /* Progress indicator */
+  .progress-track {
+    @apply h-2 rounded-full bg-muted overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-full rounded-full bg-primary transition-all duration-500;
+  }
+  
+  /* Overlay animations */
+  .overlay-enter {
+    animation: overlayEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  .overlay-exit {
+    animation: overlayExit 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+  }
+  
+  @keyframes overlayEnter {
+    from {
+      opacity: 0;
+      transform: scale(0.9) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  @keyframes overlayExit {
+    from {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: scale(0.95) translateY(-10px);
+    }
+  }
+  
+  /* HUD elements */
+  .hud-element {
+    @apply bg-card/90 backdrop-blur-sm rounded-xl px-4 py-2;
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+@layer utilities {
+  .font-game {
+    font-family: 'Nunito', system-ui, sans-serif;
+  }
+  
+  .text-shadow-soft {
+    text-shadow: 0 2px 4px hsl(220 30% 20% / 0.2);
+  }
+  
+  .no-select {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* ── Theme Transitions ─────────────────────────────────────────────────── */
+* {
+  transition-property: background-color, border-color, color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* Exclude elements that shouldn't have color transitions */
+.no-transition,
+canvas,
+video,
+img {
+  transition: none !important;
+}
+
+/* ── Page Transitions ──────────────────────────────────────────────────── */
+.page-enter {
+  animation: pageEnter 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.page-fade-in {
+  animation: pageFadeIn 0.3s ease-out forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
